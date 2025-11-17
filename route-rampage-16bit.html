@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Rampage - 16-bit Style</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background: linear-gradient(180deg, #001a33 0%, #000a1a 100%);
+            border: 8px solid #444;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8),
+                        inset 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        /* Pixel stars background */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            animation: twinkle 2s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* Airport scene - pixel art style */
+        .airport {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(0deg, #2a4a2a 0%, #1a3a1a 50%, transparent 100%);
+        }
+        
+        .runway {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background: #404040;
+            border-top: 3px solid #606060;
+        }
+        
+        .runway-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 60px,
+                #FFFF00 60px,
+                #FFFF00 80px
+            );
+        }
+        
+        .runway-centerline {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-image: repeating-linear-gradient(
+                90deg,
+                #FFFFFF 0px,
+                #FFFFFF 30px,
+                transparent 30px,
+                transparent 50px
+            );
+        }
+        
+        /* Airport terminal */
+        .terminal {
+            position: absolute;
+            bottom: 40px;
+            left: 100px;
+            width: 200px;
+            height: 80px;
+            background: #E0E0E0;
+            border: 4px solid #999;
+        }
+        
+        .terminal-windows {
+            position: absolute;
+            top: 15px;
+            left: 10px;
+            right: 10px;
+            height: 50px;
+            background-image: 
+                repeating-linear-gradient(
+                    90deg,
+                    #4682B4 0px,
+                    #4682B4 15px,
+                    #999 15px,
+                    #999 18px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    #4682B4 0px,
+                    #4682B4 15px,
+                    #999 15px,
+                    #999 18px
+                );
+        }
+        
+        .terminal-roof {
+            position: absolute;
+            top: -15px;
+            left: -10px;
+            right: -10px;
+            height: 15px;
+            background: #C1272D;
+            border: 3px solid #A01F24;
+        }
+        
+        .terminal-door {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 35px;
+            background: #1a1a1a;
+            border: 3px solid #000;
+        }
+        
+        /* Control tower */
+        .control-tower {
+            position: absolute;
+            bottom: 40px;
+            right: 150px;
+            width: 60px;
+            height: 140px;
+            background: #B0B0B0;
+            border: 4px solid #808080;
+        }
+        
+        .tower-base {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 30px;
+            background: #909090;
+            border: 4px solid #707070;
+        }
+        
+        .tower-top {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 40px;
+            background: #1a1a1a;
+            border: 4px solid #000;
+        }
+        
+        .tower-windows {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            height: 24px;
+            background-image: 
+                repeating-linear-gradient(
+                    90deg,
+                    #4682B4 0px,
+                    #4682B4 12px,
+                    #000 12px,
+                    #000 14px
+                );
+        }
+        
+        .tower-light {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #FF0000;
+            border: 2px solid #CC0000;
+            animation: tower-blink 1s infinite;
+        }
+        
+        @keyframes tower-blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0.3; }
+        }
+        
+        /* Hangar */
+        .hangar {
+            position: absolute;
+            bottom: 40px;
+            right: 400px;
+            width: 120px;
+            height: 70px;
+            background: #8B8B8B;
+            border: 4px solid #606060;
+        }
+        
+        .hangar-roof {
+            position: absolute;
+            top: -20px;
+            left: -5px;
+            right: -5px;
+            height: 25px;
+            background: #707070;
+            border: 3px solid #505050;
+            clip-path: polygon(10% 100%, 50% 0%, 90% 100%);
+        }
+        
+        .hangar-door {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 55px;
+            background: #404040;
+            border: 3px solid #303030;
+        }
+        
+        .hangar-door-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                0deg,
+                #505050 0px,
+                #505050 2px,
+                transparent 2px,
+                transparent 10px
+            );
+        }
+        
+        /* Parked plane */
+        .parked-plane {
+            position: absolute;
+            bottom: 45px;
+            left: 400px;
+            width: 80px;
+            height: 25px;
+            background: #FFFFFF;
+            border: 3px solid #CCCCCC;
+        }
+        
+        .parked-wing {
+            position: absolute;
+            width: 50px;
+            height: 8px;
+            background: #E0E0E0;
+            border: 2px solid #999;
+            top: 8px;
+            left: 20px;
+        }
+        
+        .parked-tail {
+            position: absolute;
+            width: 10px;
+            height: 25px;
+            background: #003A70;
+            border: 2px solid #002050;
+            left: 5px;
+            top: -18px;
+        }
+        .title-container {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+        }
+        
+        .title {
+            font-size: 72px;
+            color: #ffcc00;
+            text-shadow: 
+                4px 4px 0px #cc8800,
+                8px 8px 0px #000,
+                0 0 20px #ffcc00;
+            letter-spacing: 8px;
+            animation: pulse 2s ease-in-out infinite;
+            line-height: 1.3;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Pixel art gorilla */
+        .gorilla {
+            position: absolute;
+            bottom: 200px;
+            left: 120px;
+            width: 160px;
+            height: 180px;
+            z-index: 5;
+            animation: bounce 1s ease-in-out infinite;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .gorilla-pixel {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.5));
+        }
+        
+        /* Gorilla body parts */
+        .gorilla-head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: #8B4513;
+            border: 4px solid #654321;
+        }
+        
+        .gorilla-face {
+            position: absolute;
+            top: 20px;
+            left: 15px;
+            width: 50px;
+            height: 40px;
+            background: #D2691E;
+            border: 3px solid #654321;
+        }
+        
+        .gorilla-eye {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border: 2px solid #000;
+            top: 10px;
+        }
+        
+        .gorilla-eye.left { left: 8px; }
+        .gorilla-eye.right { right: 8px; }
+        
+        .gorilla-pupil {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #000;
+            top: 3px;
+            left: 3px;
+        }
+        
+        .gorilla-mouth {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 12px;
+            background: #654321;
+            border-radius: 0 0 50% 50%;
+        }
+        
+        .gorilla-body {
+            position: absolute;
+            top: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 70px;
+            background: #8B4513;
+            border: 4px solid #654321;
+        }
+        
+        .gorilla-chest {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 50px;
+            background: #D2691E;
+            border: 3px solid #654321;
+        }
+        
+        .gorilla-arm {
+            position: absolute;
+            top: 80px;
+            width: 35px;
+            height: 80px;
+            background: #8B4513;
+            border: 4px solid #654321;
+        }
+        
+        .gorilla-arm.left {
+            left: 10px;
+            transform: rotate(-15deg);
+        }
+        
+        .gorilla-arm.right {
+            right: 10px;
+            transform: rotate(15deg);
+        }
+        
+        .gorilla-hand {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 20px;
+            background: #654321;
+            border: 3px solid #4a3319;
+        }
+        
+        .gorilla-leg {
+            position: absolute;
+            top: 140px;
+            width: 40px;
+            height: 50px;
+            background: #8B4513;
+            border: 4px solid #654321;
+        }
+        
+        .gorilla-leg.left { left: 25px; }
+        .gorilla-leg.right { right: 25px; }
+        
+        /* Planes - Airbus A320 style */
+        .plane {
+            position: absolute;
+            z-index: 3;
+            filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.5));
+            animation: fly 12s linear infinite;
+        }
+        
+        .plane1 {
+            top: 120px;
+            left: -250px;
+        }
+        
+        .plane2 {
+            top: 280px;
+            left: -300px;
+            animation-delay: 6s;
+        }
+        
+        @keyframes fly {
+            0% { left: -250px; }
+            100% { left: 950px; }
+        }
+        
+        /* Delta A320 */
+        .plane-body-delta {
+            position: relative;
+            width: 160px;
+            height: 32px;
+            background: #FFFFFF;
+            border: 4px solid #E0E0E0;
+            border-radius: 16px 0 0 16px;
+        }
+        
+        .plane-nose-delta {
+            position: absolute;
+            right: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 32px;
+            background: #FFFFFF;
+            border: 4px solid #E0E0E0;
+            border-left: none;
+            border-radius: 0 50% 50% 0;
+        }
+        
+        .plane-cockpit-delta {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 12px;
+            background: #1a1a1a;
+            border: 2px solid #000;
+            border-radius: 2px;
+        }
+        
+        .plane-wing-delta {
+            position: absolute;
+            width: 140px;
+            height: 32px;
+            background: #FFFFFF;
+            border: 4px solid #C1272D;
+            top: 2px;
+            left: 25px;
+            clip-path: polygon(0% 25%, 100% 0%, 95% 100%, 5% 100%);
+            z-index: -1;
+        }
+        
+        .plane-winglet-delta {
+            position: absolute;
+            width: 10px;
+            height: 16px;
+            background: #C1272D;
+            border: 3px solid #A01F24;
+            top: -14px;
+        }
+        
+        .plane-winglet-delta.left {
+            left: 8px;
+        }
+        
+        .plane-winglet-delta.right {
+            right: 8px;
+        }
+        
+        .plane-engine-delta {
+            position: absolute;
+            width: 32px;
+            height: 24px;
+            background: #E0E0E0;
+            border: 4px solid #999;
+            border-radius: 50%;
+            top: 24px;
+            z-index: 1;
+        }
+        
+        .plane-engine-delta.left {
+            left: 50px;
+        }
+        
+        .plane-engine-delta.right {
+            left: 90px;
+        }
+        
+        .plane-engine-intake {
+            position: absolute;
+            width: 20px;
+            height: 16px;
+            background: #1a1a1a;
+            border: 3px solid #000;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .plane-tail-delta {
+            position: absolute;
+            width: 20px;
+            height: 60px;
+            background: #FFFFFF;
+            border: 4px solid #C1272D;
+            left: 8px;
+            top: -48px;
+            clip-path: polygon(0% 100%, 100% 100%, 80% 0%, 20% 0%);
+        }
+        
+        .plane-tail-logo-delta {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #C1272D;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        }
+        
+        .plane-htail-delta {
+            position: absolute;
+            width: 50px;
+            height: 12px;
+            background: #FFFFFF;
+            border: 3px solid #C1272D;
+            left: -8px;
+            top: -28px;
+            clip-path: polygon(0% 50%, 15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%);
+        }
+        
+        .plane-delta-stripe {
+            position: absolute;
+            width: 120px;
+            height: 6px;
+            background: #003A70;
+            top: 50%;
+            left: 30px;
+            transform: translateY(-50%);
+        }
+        
+        .plane-delta-logo {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: #C1272D;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            border: 2px solid #A01F24;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        }
+        
+        .plane-window-delta {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #4682B4;
+            border: 2px solid #1a1a1a;
+            border-radius: 2px;
+            top: 8px;
+        }
+        
+        .plane-window-delta:nth-child(1) { left: 45px; }
+        .plane-window-delta:nth-child(2) { left: 58px; }
+        .plane-window-delta:nth-child(3) { left: 71px; }
+        .plane-window-delta:nth-child(4) { left: 84px; }
+        .plane-window-delta:nth-child(5) { left: 97px; }
+        .plane-window-delta:nth-child(6) { left: 110px; }
+        
+        .plane-delta-text {
+            position: absolute;
+            right: 25px;
+            bottom: 6px;
+            font-size: 7px;
+            color: #003A70;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        /* Spirit A320 */
+        .plane-body-spirit {
+            position: relative;
+            width: 160px;
+            height: 32px;
+            background: #FFF200;
+            border: 4px solid #000000;
+            border-radius: 16px 0 0 16px;
+        }
+        
+        .plane-nose-spirit {
+            position: absolute;
+            right: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 32px;
+            background: #FFF200;
+            border: 4px solid #000000;
+            border-left: none;
+            border-radius: 0 50% 50% 0;
+        }
+        
+        .plane-cockpit-spirit {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 12px;
+            background: #1a1a1a;
+            border: 2px solid #000;
+            border-radius: 2px;
+        }
+        
+        .plane-wing-spirit {
+            position: absolute;
+            width: 110px;
+            height: 24px;
+            background: #FFF200;
+            border: 4px solid #000000;
+            top: 4px;
+            left: 35px;
+            clip-path: polygon(0% 20%, 100% 0%, 95% 100%, 5% 100%);
+            z-index: -1;
+        }
+        
+        .plane-engine-spirit {
+            position: absolute;
+            width: 32px;
+            height: 24px;
+            background: #E0E0E0;
+            border: 4px solid #000;
+            border-radius: 50%;
+            top: 24px;
+            z-index: 1;
+        }
+        
+        .plane-engine-spirit.left {
+            left: 50px;
+        }
+        
+        .plane-engine-spirit.right {
+            left: 90px;
+        }
+        
+        .plane-tail-spirit {
+            position: absolute;
+            width: 20px;
+            height: 60px;
+            background: #FFF200;
+            border: 4px solid #000000;
+            left: 8px;
+            top: -48px;
+            clip-path: polygon(0% 100%, 100% 100%, 80% 0%, 20% 0%);
+        }
+        
+        .plane-tail-logo-spirit {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #000000;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .plane-htail-spirit {
+            position: absolute;
+            width: 50px;
+            height: 12px;
+            background: #FFF200;
+            border: 3px solid #000000;
+            left: -8px;
+            top: -28px;
+            clip-path: polygon(0% 50%, 15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%);
+        }
+        
+        .plane-spirit-stripe-top {
+            position: absolute;
+            width: 130px;
+            height: 5px;
+            background: #000000;
+            top: 5px;
+            left: 25px;
+        }
+        
+        .plane-spirit-stripe-bottom {
+            position: absolute;
+            width: 130px;
+            height: 5px;
+            background: #000000;
+            bottom: 5px;
+            left: 25px;
+        }
+        
+        .plane-spirit-logo {
+            position: absolute;
+            width: 22px;
+            height: 14px;
+            background: #000000;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            border: 2px solid #333333;
+            border-radius: 2px;
+        }
+        
+        .plane-window-spirit {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #4682B4;
+            border: 2px solid #000000;
+            border-radius: 2px;
+            top: 8px;
+        }
+        
+        .plane-window-spirit:nth-child(1) { left: 48px; }
+        .plane-window-spirit:nth-child(2) { left: 61px; }
+        .plane-window-spirit:nth-child(3) { left: 74px; }
+        .plane-window-spirit:nth-child(4) { left: 87px; }
+        .plane-window-spirit:nth-child(5) { left: 100px; }
+        .plane-window-spirit:nth-child(6) { left: 113px; }
+        
+        .plane-spirit-text {
+            position: absolute;
+            right: 25px;
+            bottom: 6px;
+            font-size: 7px;
+            color: #000000;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        /* Building tower */
+        .tower {
+            position: absolute;
+            bottom: 0;
+            right: 200px;
+            width: 80px;
+            height: 300px;
+            background: #1a3d5c;
+            border: 4px solid #2a5d8c;
+        }
+        
+        .tower::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 40px;
+            background: #ff0000;
+            border: 2px solid #cc0000;
+        }
+        
+        /* Subtitle */
+        .subtitle {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: #00ff00;
+            text-shadow: 2px 2px 0px #000;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Stars -->
+        <div class="stars" id="stars"></div>
+        
+        <!-- Airport scene -->
+        <div class="airport">
+            <div class="runway">
+                <div class="runway-lines"></div>
+                <div class="runway-centerline"></div>
+            </div>
+            
+            <!-- Terminal building -->
+            <div class="terminal">
+                <div class="terminal-roof"></div>
+                <div class="terminal-windows"></div>
+                <div class="terminal-door"></div>
+            </div>
+            
+            <!-- Control tower -->
+            <div class="control-tower">
+                <div class="tower-base"></div>
+                <div class="tower-top">
+                    <div class="tower-windows"></div>
+                    <div class="tower-light"></div>
+                </div>
+            </div>
+            
+            <!-- Hangar -->
+            <div class="hangar">
+                <div class="hangar-roof"></div>
+                <div class="hangar-door">
+                    <div class="hangar-door-lines"></div>
+                </div>
+            </div>
+            
+            <!-- Parked plane -->
+            <div class="parked-plane">
+                <div class="parked-wing"></div>
+                <div class="parked-tail"></div>
+            </div>
+        </div>
+        
+        <!-- Gorilla -->
+        <div class="gorilla">
+            <div class="gorilla-pixel">
+                <div class="gorilla-head">
+                    <div class="gorilla-face">
+                        <div class="gorilla-eye left">
+                            <div class="gorilla-pupil"></div>
+                        </div>
+                        <div class="gorilla-eye right">
+                            <div class="gorilla-pupil"></div>
+                        </div>
+                        <div class="gorilla-mouth"></div>
+                    </div>
+                </div>
+                <div class="gorilla-body">
+                    <div class="gorilla-chest"></div>
+                </div>
+                <div class="gorilla-arm left">
+                    <div class="gorilla-hand"></div>
+                </div>
+                <div class="gorilla-arm right">
+                    <div class="gorilla-hand"></div>
+                </div>
+                <div class="gorilla-leg left"></div>
+                <div class="gorilla-leg right"></div>
+            </div>
+        </div>
+        
+        <!-- Planes -->
+        <div class="plane plane1">
+            <div class="plane-body-delta">
+                <div class="plane-nose-delta">
+                    <div class="plane-cockpit-delta"></div>
+                </div>
+                <div class="plane-wing-delta"></div>
+                <div class="plane-engine-delta left">
+                    <div class="plane-engine-intake"></div>
+                </div>
+                <div class="plane-engine-delta right">
+                    <div class="plane-engine-intake"></div>
+                </div>
+                <div class="plane-tail-delta">
+                    <div class="plane-tail-logo-delta"></div>
+                </div>
+                <div class="plane-htail-delta"></div>
+                <div class="plane-delta-stripe"></div>
+                <div class="plane-delta-logo"></div>
+                <div class="plane-window-delta"></div>
+                <div class="plane-window-delta"></div>
+                <div class="plane-window-delta"></div>
+                <div class="plane-window-delta"></div>
+                <div class="plane-window-delta"></div>
+                <div class="plane-window-delta"></div>
+                <div class="plane-delta-text">DELTA</div>
+            </div>
+        </div>
+        <div class="plane plane2">
+            <div class="plane-body-spirit">
+                <div class="plane-nose-spirit">
+                    <div class="plane-cockpit-spirit"></div>
+                </div>
+                <div class="plane-wing-spirit"></div>
+                <div class="plane-engine-spirit left">
+                    <div class="plane-engine-intake"></div>
+                </div>
+                <div class="plane-engine-spirit right">
+                    <div class="plane-engine-intake"></div>
+                </div>
+                <div class="plane-tail-spirit">
+                    <div class="plane-tail-logo-spirit"></div>
+                </div>
+                <div class="plane-htail-spirit"></div>
+                <div class="plane-spirit-stripe-top"></div>
+                <div class="plane-spirit-stripe-bottom"></div>
+                <div class="plane-spirit-logo"></div>
+                <div class="plane-window-spirit"></div>
+                <div class="plane-window-spirit"></div>
+                <div class="plane-window-spirit"></div>
+                <div class="plane-window-spirit"></div>
+                <div class="plane-window-spirit"></div>
+                <div class="plane-window-spirit"></div>
+                <div class="plane-spirit-text">SPIRIT</div>
+            </div>
+        </div>
+        
+        <!-- Title -->
+        <div class="title-container">
+            <div class="title">
+                ROUTE<br>RAMPAGE
+            </div>
+        </div>
+        
+        <!-- Subtitle -->
+        <div class="subtitle">PRESS START</div>
+    </div>
+    
+    <script>
+        // Generate random stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 60 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            starsContainer.appendChild(star);
+        }
+    </script>
+</body>
+</html>
